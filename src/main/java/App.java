@@ -1,12 +1,14 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 public class App {
 
     private Scanner sc = new Scanner(System.in);
     private int lastId = 0;
 
-    private WiseSaying[] wiseSayings = new WiseSaying[10];
-    private int lastWiseSayingIndex = -1;
+    private List<WiseSaying> wiseSayings = new ArrayList<>();
 
     public void run() {
 
@@ -37,14 +39,14 @@ public class App {
         WiseSaying wiseSaying = findById(id);
 
         if(wiseSaying == null) {
-            System.out.println("%d번 명언은 존재하지 않습니다." .formatted(id));
+            System.out.println("%d번 명언은 존재하지 않습니다.".formatted(id));
             return;
         }
 
-        System.out.print("명언(기존) : %s\n" .formatted(wiseSaying.getContent()));
+        System.out.print("명언(기존) : %s\n".formatted(wiseSaying.getContent()));
         System.out.print("명언 : ");
         String content = sc.nextLine();
-        System.out.print("작가(기존) : %s\n" .formatted(wiseSaying.getAuthor()));
+        System.out.print("작가(기존) : %s\n".formatted(wiseSaying.getAuthor()));
         System.out.print("작가 : ");
         String author = sc.nextLine();
 
@@ -52,31 +54,35 @@ public class App {
     }
 
     private void modify(WiseSaying wiseSaying, String content, String author) {
-        wiseSaying.setAuthor(author);
         wiseSaying.setContent(content);
+        wiseSaying.setAuthor(author);
     }
 
-    /** 수정이 진행되지 않으므로 modify라고 작명하지 않는다!! */
     private WiseSaying findById(int id) {
 
-        int foundIndex = findIndexById(id);
+        int foundedIndex = findIndexById(id);
 
-        if (foundIndex == -1) {
+        if (foundedIndex == -1) {
             return null;
         }
 
-        return wiseSayings[foundIndex];
+        return wiseSayings.get(foundedIndex);
     }
 
     private int findIndexById(int id) {
-        for (int i = 0; i <= lastWiseSayingIndex; i++) {
-            WiseSaying foundedWiseSaying = wiseSayings[i];
-            if (id == foundedWiseSaying.getId()) {
-                return i;
-            }
-        }
-
-        return -1;
+        /**반복문 버전*/
+//        for (int i = 0; i < wiseSayings.size(); i++) {
+//            WiseSaying foundedWiseSaying = wiseSayings.get(i);
+//            if (id == foundedWiseSaying.getId()) {
+//                return i;
+//            }
+//        }
+        /**스트림 버전*/
+        return IntStream
+                .range(0, wiseSayings.size())
+                .filter((i) -> wiseSayings.get(i).getId() == id)
+                .findFirst()
+                .orElse(-1);
     }
 
     private void actionDelete(String cmd) {
@@ -84,49 +90,45 @@ public class App {
         String idStr = cmd.split("=")[1];
         int id = Integer.parseInt(idStr);
 
-        boolean result = delete(id);
+        boolean rst = delete(id);
 
-        if(!result){
-            System.out.println("%d번 명언은 존재하지 않습니다." .formatted(id));
-        }else {
-            System.out.println("%d번 명언이 삭제되었습니다.".formatted(id));
+        if (!rst) {
+            System.out.println("%d번 명언은 존재하지 않습니다.".formatted(id));
+            return;
         }
+
+        System.out.println("%d번 명언이 삭제되었습니다.".formatted(id));
     }
 
-    private boolean delete(int id) {
+    private boolean delete(int deleteTarget) {
 
-        int deleteTargetIndex = findIndexById(id);
+//        int foundIndex = findIndexById(deleteTarget);
+//
+//        if (foundIndex == -1) return false;
+//
+//        wiseSayings.remove(foundIndex);
 
-        if (deleteTargetIndex == -1) {
-            return false;
-        }
+        // 편리하고 가독성이 더 좋지만, 성능은 좀 부족함.
+        return wiseSayings.removeIf((wiseSaying) -> wiseSaying.getId() == deleteTarget);
 
-        for (int i = deleteTargetIndex; i < lastWiseSayingIndex; i++) {
-            wiseSayings[i] = wiseSayings[i + 1];
-        }
-
-        lastWiseSayingIndex--;
-        return true;
     }
 
     private void actionList() {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
-        WiseSaying[] foundedWiseSayings = findList();
+        List<WiseSaying> foundedWiseSayings = findList();
 
         for (WiseSaying wiseSaying : foundedWiseSayings) {
             System.out.printf("%d / %s / %s\n", wiseSaying.getId(), wiseSaying.getAuthor(), wiseSaying.getContent());
         }
     }
 
-    private WiseSaying[] findList() {
+    private List<WiseSaying> findList() {
 
-        WiseSaying[] foundedWiseSayings = new WiseSaying[lastWiseSayingIndex + 1];
-        int foundedWiseSayingIndex = -1;
+        List<WiseSaying> foundedWiseSayings = new ArrayList<>();
 
-        for (int i = lastWiseSayingIndex; i >= 0; i--) {
-            WiseSaying foundedWiseSaying = wiseSayings[i];
-            foundedWiseSayings[++foundedWiseSayingIndex] = foundedWiseSaying;
+        for(WiseSaying wiseSaying : wiseSayings.reversed()) {
+            foundedWiseSayings.add(wiseSaying);
         }
 
         return foundedWiseSayings;
@@ -144,6 +146,6 @@ public class App {
 
     private void write(String content, String author) {
         WiseSaying wiseSaying = new WiseSaying(++lastId, content, author);
-        wiseSayings[++lastWiseSayingIndex] = wiseSaying;
+        wiseSayings.add(wiseSaying);
     }
 }
