@@ -1,5 +1,7 @@
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Rq {
 
@@ -14,12 +16,21 @@ public class Rq {
         String params = cmdBits.length > 1 ? cmdBits[1] : ""; // 목록 or 목록?page=1 의 형태인지
 
         String[] paramsBits = params.split("&");
-        for (String param : paramsBits) {
-            String[] paramBits = param.split("=");
-            String key = paramBits[0];
-            String value = paramBits.length > 1 ? paramBits[1] : "";
-            paramMap.put(key, value);
-        }
+//        for (String param : paramsBits) {
+//            String[] paramBits = param.split("=");
+//            String key = paramBits[0];
+//            String value = paramBits.length > 1 ? paramBits[1] : "";
+//            paramMap.put(key, value);
+//        }
+        paramMap = Arrays.stream(paramsBits) // ["id=1", "name=aaa", "age=20"] 이 넘어옴
+                .map(param -> param.split("=")) // "id=1" 가 넘어옴
+                .filter((paramBits) -> paramBits.length == 2
+                        && paramBits[0] != null && paramBits[1] != null) // ["id", "1"]
+                .collect(Collectors.toMap(
+                        bits -> bits[0],
+                        bits -> bits[1]
+                ));
+
     }
 
     public String getAction() {
