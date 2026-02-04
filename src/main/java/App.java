@@ -37,9 +37,31 @@ public class App {
         }
     }
 
+    private void actionDelete(Rq rq) {
+
+        int id = rq.getParamAsInt("id", -1);
+        if (id == -1) {
+            System.out.println("id를 제대로 입력해주세요.");
+            return;
+        }
+        boolean rst = delete(id);
+
+        if (!rst) {
+            System.out.println("%d번 명언은 존재하지 않습니다.".formatted(id));
+            return;
+        }
+
+        System.out.println("%d번 명언이 삭제되었습니다.".formatted(id));
+    }
+
     private void actionModify(Rq rq) {
 
-        int id = rq.getParamAsInt("id");
+        int id = rq.getParamAsInt("id", -1);
+        if (id == -1) {
+            System.out.println("id를 제대로 입력해주세요.");
+            return;
+        }
+
         WiseSaying wiseSaying = findById(id);
 
         if(wiseSaying == null) {
@@ -87,19 +109,6 @@ public class App {
                 .filter((i) -> wiseSayings.get(i).getId() == id)
                 .findFirst()
                 .orElse(-1);
-    }
-
-    private void actionDelete(Rq rq) {
-
-        int id = rq.getParamAsInt("id");
-        boolean rst = delete(id);
-
-        if (!rst) {
-            System.out.println("%d번 명언은 존재하지 않습니다.".formatted(id));
-            return;
-        }
-
-        System.out.println("%d번 명언이 삭제되었습니다.".formatted(id));
     }
 
     private boolean delete(int deleteTarget) {

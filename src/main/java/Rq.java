@@ -25,12 +25,19 @@ public class Rq {
     public String getAction() {
         return action;
     }
-
-    public String getParam (String key){
-        return paramMap.get(key);
+    /**이후 목록?~ 에서 사용됨*/
+    public String getParam (String key, String defaultValue) {
+        if (paramMap.containsKey(key)) {
+            return paramMap.get(key);
+        }
+        return defaultValue;
     }
 
-    public int getParamAsInt(String key) {
-        return Integer.parseInt(paramMap.get(key));
+    public int getParamAsInt(String key, int defaultValue) {
+        try{
+            return Integer.parseInt(paramMap.get(key));
+        }catch (NumberFormatException e){
+            return defaultValue;
+        }
     }
 }
