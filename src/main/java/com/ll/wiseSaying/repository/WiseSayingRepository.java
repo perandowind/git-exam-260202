@@ -56,11 +56,14 @@ public class WiseSayingRepository {
 //        wiseSayings.remove(foundIndex);
     }
 
-    /**관례상 저장(write)을 했으면, 저장한 것을 반환함*/
-    public WiseSaying write(String content, String author) {
-        WiseSaying wiseSaying = new WiseSaying(++lastId, content, author);
-        wiseSayings.add(wiseSaying);
+    public WiseSaying save(WiseSaying wiseSaying) {
 
+        if(wiseSaying.getId() == 0){
+            /**id가 0 = 기존에 없던것 -> 새로 등록*/
+            wiseSaying.setId(++lastId);
+            wiseSayings.add(wiseSaying);
+        }
+        /**id가 0이 아니면 수정, 수정 코드가 필요하다면 작성. 지금은 필요X */
         return wiseSaying;
     }
 }
