@@ -18,24 +18,28 @@ public class App {
             System.out.print("명령) ");
             String cmd = sc.nextLine();
 
-            if (cmd.equals("종료")) {
+            /**명령어(cmd) 분석 수행 클래스 Rq*/
+            Rq rq = new Rq(cmd); // cmd 분석 객체
+
+            String action = rq.getAction();
+
+            if (action.equals("종료")) {
                 break;
-            } else if (cmd.equals("등록")) {
+            } else if (action.equals("등록")) {
                 actionWrite();
-            } else if (cmd.equals("목록")) {
+            } else if (action.equals("목록")) {
                 actionList();
-            } else if (cmd.startsWith("삭제")) {
-                actionDelete(cmd);
-            } else if (cmd.startsWith("수정")) {
-                actionModify(cmd);
+            } else if (action.startsWith("삭제")) {
+                actionDelete(rq);
+            } else if (action.startsWith("수정")) {
+                actionModify(rq);
             }
         }
     }
 
-    private void actionModify(String cmd) {
+    private void actionModify(Rq rq) {
 
-        String idStr = cmd.split("=")[1];
-        int id = Integer.parseInt(idStr);
+        int id = rq.getParamAsInt("id");
         WiseSaying wiseSaying = findById(id);
 
         if(wiseSaying == null) {
@@ -85,11 +89,9 @@ public class App {
                 .orElse(-1);
     }
 
-    private void actionDelete(String cmd) {
+    private void actionDelete(Rq rq) {
 
-        String idStr = cmd.split("=")[1];
-        int id = Integer.parseInt(idStr);
-
+        int id = rq.getParamAsInt("id");
         boolean rst = delete(id);
 
         if (!rst) {
@@ -103,9 +105,7 @@ public class App {
     private boolean delete(int deleteTarget) {
 
 //        int foundIndex = findIndexById(deleteTarget);
-//
 //        if (foundIndex == -1) return false;
-//
 //        wiseSayings.remove(foundIndex);
 
         // 편리하고 가독성이 더 좋지만, 성능은 좀 부족함.
