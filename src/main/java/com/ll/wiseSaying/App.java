@@ -1,3 +1,5 @@
+package com.ll.wiseSaying;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -18,7 +20,7 @@ public class App {
             System.out.print("명령) ");
             String cmd = sc.nextLine();
 
-            /**명령어(cmd) 분석 수행 클래스 Rq*/
+            /**명령어(cmd) 분석 수행 클래스 com.ll.wiseSaying.Rq*/
             Rq rq = new Rq(cmd); // cmd 분석 객체
 
             String action = rq.getAction();
@@ -98,7 +100,7 @@ public class App {
     private int findIndexById(int id) {
         /**반복문 버전*/
 //        for (int i = 0; i < wiseSayings.size(); i++) {
-//            WiseSaying foundedWiseSaying = wiseSayings.get(i);
+//            com.ll.wiseSaying.WiseSaying foundedWiseSaying = wiseSayings.get(i);
 //            if (id == foundedWiseSaying.getId()) {
 //                return i;
 //            }
