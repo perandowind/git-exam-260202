@@ -1,4 +1,4 @@
-package com.ll.wiseSaying;
+package com.ll;
 
 import java.util.Arrays;
 import java.util.HashMap;

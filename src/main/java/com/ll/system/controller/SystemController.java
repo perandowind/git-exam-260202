@@ -1,4 +1,4 @@
-package com.ll.wiseSaying;
+package com.ll.system.controller;
 
 public class SystemController {
 
