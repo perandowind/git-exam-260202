@@ -1,18 +1,17 @@
 package com.ll;
 
+import com.ll.global.AppContext;
+import com.ll.global.Rq;
 import com.ll.system.controller.SystemController;
 import com.ll.wiseSaying.controller.WiseSayingController;
-import com.ll.wiseSaying.entity.WiseSaying;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class App {
 
     private Scanner sc = new Scanner(System.in);
-    private SystemController systemController = new SystemController();
-    private WiseSayingController wiseSayingController = new WiseSayingController();
+    private SystemController systemController = AppContext.systemController;
+    private WiseSayingController wiseSayingController = AppContext.wiseSayingController;
 
     public void run() {
 
@@ -22,7 +21,7 @@ public class App {
             System.out.print("명령) ");
             String cmd = sc.nextLine();
 
-            /**명령어(cmd) 분석 수행 클래스 com.ll.Rq*/
+            /**명령어(cmd) 분석 수행 클래스 com.ll.global.Rq*/
             Rq rq = new Rq(cmd); // cmd 분석 객체
 
             String action = rq.getAction();

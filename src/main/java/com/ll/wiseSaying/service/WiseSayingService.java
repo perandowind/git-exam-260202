@@ -1,14 +1,14 @@
 package com.ll.wiseSaying.service;
 
+import com.ll.global.AppContext;
 import com.ll.wiseSaying.entity.WiseSaying;
 import com.ll.wiseSaying.repository.WiseSayingRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class WiseSayingService {
 
-    WiseSayingRepository wiseSayingRepository = new  WiseSayingRepository();
+    WiseSayingRepository wiseSayingRepository = AppContext.wiseSayingRepository;
 
     public WiseSaying findById(int id) {
         return wiseSayingRepository.findById(id);
